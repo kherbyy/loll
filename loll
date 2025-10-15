@@ -1733,23 +1733,51 @@ MenuGroup:AddButton('Unload', function()
 end)
 
 MenuGroup:AddButton('Mobile Unload', function()
-    Library.Window.Parent.Enabled = false
-    -- Create a small reopen button for mobile
+    Library:Toggle(false)
+    -- Create a smaller draggable reopen button on the right side
     local sg = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
     sg.Name = "MobileReopenUI"
     sg.ResetOnSpawn = false
     local btn = Instance.new("TextButton", sg)
-    btn.Size = UDim2.new(0, 80, 0, 40)
-    btn.Position = UDim2.new(0.9, -40, 0.1, 0)
+    btn.Size = UDim2.new(0, 100, 0, 40)
+    btn.Position = UDim2.new(0.9, -50, 0.1, 0)
     btn.Text = "Reopen UI"
-    btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.BorderSizePixel = 0
+    btn.BorderSizePixel = 2
+    btn.BorderColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.SourceSansBold
     btn.TextSize = 14
     btn.MouseButton1Click:Connect(function()
-        Library.Window.Parent.Enabled = true
+        Library:Toggle(true)
         sg:Destroy()
+    end)
+
+    -- Make the button draggable
+    local dragging = false
+    local dragStart
+    local startPos
+
+    btn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = btn.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    btn.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            if dragging then
+                local delta = input.Position - dragStart
+                btn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end
     end)
 end)
 
