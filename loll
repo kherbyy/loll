@@ -1727,15 +1727,36 @@ local listsStatus = StatusGroup:AddLabel('Target Only: 0 | Do Not Target: 0')
 
 local MenuGroup = Tabs.Settings:AddLeftGroupbox('Menu')
 
-MenuGroup:AddButton('Unload', function() 
+MenuGroup:AddButton('Unload', function()
     cleanupHighlights()
-    Library:Unload() 
+    Library:Unload()
 end)
 
-MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { 
-    Default = 'End', 
-    NoUI = true, 
-    Text = 'Menu keybind' 
+MenuGroup:AddButton('Mobile Unload', function()
+    Library.Window:SetVisible(false)
+    -- Create a small reopen button for mobile
+    local sg = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+    sg.Name = "MobileReopenUI"
+    sg.ResetOnSpawn = false
+    local btn = Instance.new("TextButton", sg)
+    btn.Size = UDim2.new(0, 80, 0, 40)
+    btn.Position = UDim2.new(0.9, -40, 0.1, 0)
+    btn.Text = "Reopen UI"
+    btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.BorderSizePixel = 0
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 14
+    btn.MouseButton1Click:Connect(function()
+        Library.Window:SetVisible(true)
+        sg:Destroy()
+    end)
+end)
+
+MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', {
+    Default = 'End',
+    NoUI = true,
+    Text = 'Menu keybind'
 })
 
 Library.ToggleKeybind = Enum.KeyCode[Options.MenuKeybind.Value]
