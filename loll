@@ -1,4 +1,4 @@
-
+    
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -1733,7 +1733,7 @@ MenuGroup:AddButton('Unload', function()
 end)
 
 MenuGroup:AddButton('Mobile Unload', function()
-    Library.Window:SetVisible(false)
+    Library.Window.Parent.Enabled = false
     -- Create a small reopen button for mobile
     local sg = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
     sg.Name = "MobileReopenUI"
@@ -1748,7 +1748,7 @@ MenuGroup:AddButton('Mobile Unload', function()
     btn.Font = Enum.Font.SourceSansBold
     btn.TextSize = 14
     btn.MouseButton1Click:Connect(function()
-        Library.Window:SetVisible(true)
+        Library.Window.Parent.Enabled = true
         sg:Destroy()
     end)
 end)
